@@ -1,19 +1,19 @@
-require('./config/database').connect();
-const express = require('express');
-const cookieParser = require('cookie-parser'); // parse cookie header and populate req.cookies
-const bodyParser = require('body-parser'); // parses incoming request bodies (req.body)
+require("./config/database").connect();
+const express = require("express");
+const cookieParser = require("cookie-parser"); // parse cookie header and populate req.cookies
+const bodyParser = require("body-parser"); // parses incoming request bodies (req.body)
 const app = express();
 const { PORT, MONGODB_URL, SESSION_SECRET_KEY } = process.env;
-const expressLayouts = require('express-ejs-layouts');
+const expressLayouts = require("express-ejs-layouts");
 
 // used for session cookie
-const session = require('express-session');
-const passport = require('passport');
-const passportLocal = require('./config/passport-local-strategy');
+const session = require("express-session");
+const passport = require("passport");
+const passportLocal = require("./config/passport-local-strategy");
 
-const MongoStore = require('connect-mongo');
-const flash = require('connect-flash');
-const customMware = require('./config/middleware');
+const MongoStore = require("connect-mongo");
+const flash = require("connect-flash");
+const customMware = require("./config/middleware");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -21,18 +21,18 @@ app.use(cookieParser());
 
 app.use(expressLayouts);
 
-app.use(express.static('./assets'));
-app.set('layout extractStyles', true);
-app.set('layout extractScripts', true);
+app.use(express.static("./assets"));
+app.set("layout extractStyles", true);
+app.set("layout extractScripts", true);
 
 // set up view engine
-app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set("view engine", "ejs");
+app.set("views", "./views");
 
 // mongo store is used to store the session cookie in the db
 app.use(
   session({
-    name: 'employee-review-system',
+    name: "employee-review-system",
     secret: SESSION_SECRET_KEY,
     saveUninitialized: false,
     resave: false,
@@ -41,10 +41,10 @@ app.use(
     },
     store: MongoStore.create({
       mongoUrl: MONGODB_URL,
-      autoRemove: 'disabled',
+      autoRemove: "disabled",
     }),
     function(err) {
-      console.log(err || 'connect-mongodb setup ok');
+      console.log(err || "connect-mongodb setup ok");
     },
   })
 );
@@ -59,9 +59,9 @@ app.use(flash());
 app.use(customMware.setFlash);
 
 // use express router
-app.use('/', require('./routes'));
+app.use("/", require("./routes"));
 
-app.listen(PORT || 5000, (err) => {
+app.listen(PORT || 5000, "0.0.0.0", (err) => {
   if (err) {
     console.log(`Error in running the server: ${err}`);
   }
